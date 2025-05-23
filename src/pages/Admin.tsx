@@ -1,12 +1,16 @@
 
+import { useState } from "react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { StatsCard } from "@/components/admin/StatsCard";
 import { SectionCard } from "@/components/admin/SectionCard";
+import { AddItemDialog } from "@/components/admin/AddItemDialog";
 import { Calendar, Briefcase, FolderOpen, PenTool, TrendingUp, Users, Eye, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Admin() {
   const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentSection, setCurrentSection] = useState("");
 
   // Mock data - in a real app, this would come from your backend
   const stats = [
@@ -20,35 +24,50 @@ export default function Admin() {
     { title: "Rating", value: "4.8", icon: Star, change: "Based on 127 reviews" },
   ];
 
-  const events = [
+  const [events, setEvents] = useState([
     { id: 1, title: "Film Premiere Night", description: "Showcase of latest short films" },
     { id: 2, title: "Photography Workshop", description: "Advanced lighting techniques" },
     { id: 3, title: "Client Meeting", description: "Project discussion with ABC Corp" }
-  ];
+  ]);
 
-  const services = [
+  const [services, setServices] = useState([
     { id: 1, title: "Commercial Photography", description: "Professional product and corporate photography" },
     { id: 2, title: "Video Production", description: "Full-service video creation and editing" },
     { id: 3, title: "Event Coverage", description: "Comprehensive event documentation" }
-  ];
+  ]);
 
-  const projects = [
+  const [projects, setProjects] = useState([
     { id: 1, title: "Tech Startup Brand Video", description: "30-second promotional video for SaaS company" },
     { id: 2, title: "Wedding Documentary", description: "Cinematic wedding coverage and editing" },
     { id: 3, title: "Restaurant Menu Shoot", description: "Food photography for upscale restaurant" }
-  ];
+  ]);
 
-  const blogs = [
+  const [blogs, setBlogs] = useState([
     { id: 1, title: "5 Tips for Better Lighting", description: "Essential lighting techniques for filmmakers" },
     { id: 2, title: "The Art of Storytelling", description: "How to craft compelling narratives in film" },
     { id: 3, title: "Behind the Scenes", description: "A look at our latest commercial project" }
-  ];
+  ]);
 
   const handleAdd = (section: string) => {
-    toast({
-      title: "Add New " + section,
-      description: `Opening form to create a new ${section.toLowerCase()}...`,
-    });
+    setCurrentSection(section);
+    setDialogOpen(true);
+  };
+
+  const handleAddItem = (item: any) => {
+    switch (currentSection) {
+      case "Event":
+        setEvents([...events, item]);
+        break;
+      case "Service":
+        setServices([...services, item]);
+        break;
+      case "Project":
+        setProjects([...projects, item]);
+        break;
+      case "Blog Post":
+        setBlogs([...blogs, item]);
+        break;
+    }
   };
 
   const handleEdit = (section: string, id: string) => {
@@ -73,7 +92,7 @@ export default function Admin() {
       <main className="p-6 space-y-8">
         {/* Stats Overview */}
         <section className="animate-fade-in">
-          <h2 className="text-3xl font-bold text-foreground mb-6 animate-slide-up">
+          <h2 className="text-3xl font-bold text-foreground mb-6 animate-slide-down">
             Dashboard Overview
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -92,7 +111,7 @@ export default function Admin() {
 
         {/* Content Management Sections */}
         <section className="space-y-8">
-          <h2 className="text-3xl font-bold text-foreground animate-slide-up">
+          <h2 className="text-3xl font-bold text-foreground animate-slide-down">
             Content Management
           </h2>
           
@@ -143,6 +162,13 @@ export default function Admin() {
           </div>
         </section>
       </main>
+
+      <AddItemDialog
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        itemType={currentSection}
+        onAdd={handleAddItem}
+      />
     </div>
   );
 }

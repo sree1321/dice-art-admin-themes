@@ -10,9 +10,9 @@ export function LoadingSkeleton({ className = "", rows = 3 }: LoadingSkeletonPro
   return (
     <div className={`space-y-4 ${className}`}>
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="animate-pulse">
-          <div className="loading-skeleton h-4 rounded-md mb-2"></div>
-          <div className="loading-skeleton h-3 rounded-md w-3/4"></div>
+        <div key={i} className="animate-shimmer">
+          <div className="h-4 bg-gradient-to-r from-muted via-muted/50 to-muted rounded-md mb-2 animate-wave"></div>
+          <div className="h-3 bg-gradient-to-r from-muted via-muted/50 to-muted rounded-md w-3/4 animate-wave delay-200"></div>
         </div>
       ))}
     </div>
